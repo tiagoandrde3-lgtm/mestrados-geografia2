@@ -1,7 +1,7 @@
 // Dados dos editais (somente Mestrado).
 // Status:
 // "aberta" = inscrições em aberto
-// "futura" = inscrições ainda vão abrir
+// "futura" = inscrições vão abrir
 
 const PROGRAMAS = [
 
@@ -17,7 +17,6 @@ const PROGRAMAS = [
   url:"",
   atualizado:"2026-09-30",
 
-  // 🟡 VAI ABRIR
   status:"futura",
   cor:"#fbbc04",
   corFundo:"#fff2cc",
@@ -138,7 +137,6 @@ const PROGRAMAS = [
   url:"",
   atualizado:"2026-09-30",
 
-  // 🟢 ABERTA
   status:"aberta",
   cor:"#34a853",
   corFundo:"#d9ead3",
@@ -254,7 +252,6 @@ const PROGRAMAS = [
   url:"",
   atualizado:"2026-09-30",
 
-  // 🟡 VAI ABRIR
   status:"futura",
   cor:"#fbbc04",
   corFundo:"#fff2cc",
@@ -381,7 +378,6 @@ const PROGRAMAS = [
   url:"",
   atualizado:"2026-09-30",
 
-  // 🟢 ABERTA
   status:"aberta",
   cor:"#34a853",
   corFundo:"#d9ead3",
@@ -475,54 +471,51 @@ const PROGRAMAS = [
 // =====================================================
 
 const STATUS = {
+
   aberta: {
-    texto: "Inscrições abertas",
     cor: "#34a853",
     fundo: "#d9ead3",
     borda: "#34a853"
   },
 
   futura: {
-    texto: "Inscrições vão abrir",
     cor: "#fbbc04",
     fundo: "#fff2cc",
     borda: "#fbbc04"
   }
+
 };
 
 
 // =====================================================
-// FUNÇÃO PARA OBTER A CONFIGURAÇÃO DO STATUS
-// =====================================================
-
-function getStatus(programa) {
-  return STATUS[programa.status] || STATUS.futura;
-}
-
-
-// =====================================================
-// EXEMPLO DE USO NA CAIXA DO PROGRAMA
+// APLICAÇÃO DA COR NA CAIXA
 // =====================================================
 
 function aplicarCorStatus(programa, elemento) {
 
-  const status = getStatus(programa);
+  const status = STATUS[programa.status];
+
+  if (!status || !elemento) return;
 
   elemento.style.backgroundColor = status.fundo;
   elemento.style.borderLeft = `6px solid ${status.borda}`;
 
-  elemento.innerHTML += `
-    <div style="
-      display:inline-block;
-      margin-top:10px;
-      padding:5px 10px;
-      border-radius:6px;
-      background:${status.cor};
-      color:white;
-      font-weight:600;
-      font-size:13px;
-    ">
-      ${status.texto}
-    </div>
-  `;
+}
+
+
+// =====================================================
+// OBTÉM A COR DO PROGRAMA
+// =====================================================
+
+function getCorPrograma(programa) {
+
+  const status = STATUS[programa.status];
+
+  if (!status) return null;
+
+  return {
+    fundo: status.fundo,
+    borda: status.borda
+  };
+
 }
