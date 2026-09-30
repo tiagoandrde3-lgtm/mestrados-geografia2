@@ -1,945 +1,119 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mestrados Abertos – Geografia</title>
-
-<style>
-:root{
-  --bg:#eef2f4;
-  --ink:#14232b;
-  --mut:#51636c;
-  --card:#fff;
-  --line:#d3dde2;
-  --ac:#0f6b6b;
-}
-
-*{
-  box-sizing:border-box
-}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font:16px/1.55 system-ui,sans-serif
-}
-
-header,main{
-  max-width:1000px;
-  margin:0 auto;
-  padding:0 16px
-}
-
-header{
-  padding-top:32px
-}
-
-h1{
-  font:700 2rem/1.2 Georgia,serif;
-  margin:0 0 6px
-}
-
-header p{
-  color:var(--mut);
-  margin:0 0 20px;
-  max-width:60ch
-}
-
-.bar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:20px
-}
-
-input,select,button{
-  font:inherit;
-  padding:9px 12px;
-  border:1px solid var(--line);
-  border-radius:6px;
-  background:#fff;
-  color:var(--ink)
-}
-
-input{
-  flex:1;
-  min-width:200px
-}
-
-button{
-  cursor:pointer
-}
-
-button.on{
-  background:var(--ac);
-  color:#fff;
-  border-color:var(--ac)
-}
-
-:focus-visible{
-  outline:3px solid var(--ac);
-  outline-offset:2px
-}
-
-
-/* =====================================================
-   CAIXAS DOS PROGRAMAS
-   ===================================================== */
-
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:8px;
-  padding:20px;
-  margin-bottom:16px;
-  transition:background-color .2s,border-color .2s
-}
-
-
-/* =====================================================
-   CORES DOS STATUS
-   ===================================================== */
-
-.card.aberta{
-  background:#d9ead3;
-  border-color:#34a853;
-}
-
-.card.futura{
-  background:#fff2cc;
-  border-color:#fbbc04;
-}
-
-.card.encerrada{
-  background:#f4cccc;
-  border-color:#8a3b3b;
-}
-
-.card.neutro{
-  background:#fff;
-  border-color:#d3dde2;
-}
-
-
-/* =====================================================
-   CONTEÚDO
-   ===================================================== */
-
-.top{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:flex-start
-}
-
-.card h2{
-  font:700 1.3rem Georgia,serif;
-  margin:0
-}
-
-.sub{
-  color:var(--mut);
-  font-size:.92rem;
-  margin:2px 0 0
-}
-
-
-/* Não mostrar etiqueta de status */
-
-.pill{
-  display:none
-}
-
-
-dl{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:12px;
-  margin:16px 0
-}
-
-dt{
-  font-size:.85rem;
-  color:var(--mut)
-}
-
-dd{
-  margin:0;
-  font-weight:600
-}
-
-details{
-  border-top:1px solid rgba(0,0,0,.12);
-  padding:10px 0
-}
-
-summary{
-  cursor:pointer;
-  font-weight:600
-}
-
-details>div{
-  padding:8px 0 0
-}
-
-table{
-  border-collapse:collapse;
-  width:100%;
-  font-size:.93rem
-}
-
-th,td{
-  text-align:left;
-  padding:7px 10px;
-  border-bottom:1px solid rgba(0,0,0,.12);
-  vertical-align:top
-}
-
-.scroll{
-  overflow-x:auto
-}
-
-ul{
-  margin:6px 0;
-  padding-left:20px
-}
-
-.linha{
-  margin-bottom:12px
-}
-
-.linha h4{
-  margin:0
-}
-
-.note{
-  background:#fff7e0;
-  border-left:4px solid #9a6a00;
-  padding:8px 12px;
-  margin:8px 0
-}
-
-footer{
-  max-width:1000px;
-  margin:0 auto;
-  padding:16px 16px 40px;
-  color:var(--mut);
-  font-size:.9rem
-}
-</style>
-</head>
-
-
-<body>
-
-<header>
-
-  <h1>Mestrados abertos em Geografia</h1>
-
-  <p>
-    Prazos, vagas, exigências do projeto e orientadores dos editais,
-    no mesmo formato para você comparar.
-  </p>
-
-  <div class="bar">
-
-    <input
-      id="q"
-      type="search"
-      placeholder="Buscar por universidade, linha, orientador ou tema"
-      aria-label="Buscar"
-    >
-
-    <select id="st" aria-label="Situação da inscrição">
-
-      <option value="">Todas as situações</option>
-
-      <option>Aberta</option>
-
-      <option>Em breve</option>
-
-      <option>Encerrada</option>
-
-      <option>Ver edital</option>
-
-    </select>
-
-    <button id="v1" class="on">
-      Programas
-    </button>
-
-    <button id="v2">
-      Comparar
-    </button>
-
-  </div>
-
-</header>
-
-
-<main id="out"></main>
-
-
-<footer>
-  Dados compilados dos editais. Confirme sempre prazos e regras no edital oficial antes de se inscrever.
-</footer>
-
-
-<script src="data/programas.js"></script>
-
-
-<script>
-
-/* =====================================================
-   ESCAPE DE HTML
-   ===================================================== */
-
-const esc=s=>String(s??'').replace(
-  /[&<>"]/g,
-  c=>({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;'
-  }[c])
-);
-
-
-/* =====================================================
-   FORMATA DATA
-   ===================================================== */
-
-const fmt=d=>
-  d
-  ?d.split('-').reverse().join('/')
-  :'—';
-
-
-/* =====================================================
-   STATUS
-   =====================================================
-
-   O status agora vem diretamente do arquivo
-   programas.js.
-
-   "aberta" = verde
-   "futura" = amarelo
-
-   Se futuramente for colocado:
-   status:"encerrada"
-   a caixa ficará vermelha.
-
-   ===================================================== */
-
-function status(p){
-
-  if(p.status==="aberta"){
-    return ['Aberta','aberta'];
-  }
-
-  if(p.status==="futura"){
-    return ['Em breve','futura'];
-  }
-
-  if(p.status==="encerrada"){
-    return ['Encerrada','encerrada'];
-  }
-
-  return ['Ver edital','neutro'];
-}
-
-
-/* =====================================================
-   CORES
-   ===================================================== */
-
-const STATUS_CORES={
-
-  aberta:{
-    fundo:"#d9ead3",
-    borda:"#34a853"
+{
+  id:"ufs",
+  sigla:"UFS",
+  nome:"Universidade Federal de Sergipe",
+  programa:"PPGEO – Geografia",
+  edital:"PPGEO/POSGRAP/UFS nº 03/2026",
+  cidade:"São Cristóvão/Aracaju",
+  uf:"SE",
+  modalidade:"Presencial; defesa do projeto por videoconferência",
+  url:"",
+  atualizado:"2026-09-30",
+
+  status:"aberta",
+  cor:"#34a853",
+  corFundo:"#d9ead3",
+
+  vagas:{
+    total:26,
+    detalhe:"6 PPI e 3 adicionais para PcD. Sem número fixo de bolsas."
   },
 
-  futura:{
-    fundo:"#fff2cc",
-    borda:"#fbbc04"
+  inscricao:{
+    inicio:"2026-09-14",
+    fim:"2026-10-12",
+    taxa:"R$ 30,00",
+    obs:"Inscrições de 14/09/2026 a 12/10/2026. Taxa via GRU (SIGAA, Banco do Brasil) até 13/10/2026."
   },
 
-  encerrada:{
-    fundo:"#f4cccc",
-    borda:"#8a3b3b"
+  cronograma:[
+    ["Pagamento da taxa","até 13/10/2026"],
+    ["Homologação","20/10/2026"],
+    ["Avaliação dos projetos","26/10 a 06/11/2026"],
+    ["Defesa dos projetos","12/11 a 19/11/2026"],
+    ["Avaliação do Lattes","30/11 a 02/12/2026"],
+    ["Resultado final","11/12/2026"]
+  ],
+
+  selecao:[
+    ["Projeto de pesquisa","Eliminatória","mín. 7,0"],
+    ["Defesa do projeto","Eliminatória","mín. 7,0"],
+    ["Lattes e histórico","Classificatória","—"]
+  ],
+
+  projeto:{
+    limite:"10 a 15 laudas",
+    formato:"PDF único enviado pelo SIGAA",
+    estrutura:[
+      "Introdução/Justificativa e Problema",
+      "Hipóteses, pressupostos ou questões norteadoras",
+      "Objetivos",
+      "Fundamentação teórica",
+      "Metodologia",
+      "Cronograma",
+      "Referências"
+    ],
+    criterios:[
+      ["Pertinência à linha",2],
+      ["Síntese e clareza",2],
+      ["Domínio teórico",3],
+      ["Exposição metodológica",2],
+      ["Exequibilidade no prazo",1]
+    ],
+    regras:""
   },
 
-  neutro:{
-    fundo:"#ffffff",
-    borda:"#d3dde2"
-  }
-
-};
-
-
-/* =====================================================
-   TABELA
-   ===================================================== */
-
-const tbl=(h,rows)=>`
-
-<div class="scroll">
-
-<table>
-
-<tr>
-
-${h.map(x=>`
-<th>${esc(x)}</th>
-`).join('')}
-
-</tr>
-
-${rows.map(r=>`
-
-<tr>
-
-${r.map(c=>`
-<td>${esc(c)}</td>
-`).join('')}
-
-</tr>
-
-`).join('')}
-
-</table>
-
-</div>
-
-`;
-
-
-/* =====================================================
-   CARTÃO DO PROGRAMA
-   ===================================================== */
-
-function card(p){
-
-  const[s,c]=status(p);
-
-  const j=p.projeto;
-
-  const cores=STATUS_CORES[c] || STATUS_CORES.neutro;
-
-
-  return `
-
-<article
-  class="card ${c}"
-  style="
-    background-color:${cores.fundo};
-    border-color:${cores.borda};
-  "
->
-
-
-  <div class="top">
-
-    <div>
-
-      <h2>
-        ${esc(p.sigla)} – ${esc(p.programa)}
-      </h2>
-
-      <p class="sub">
-        ${esc(p.nome)} ·
-        ${esc(p.cidade)}/${esc(p.uf)} ·
-        ${esc(p.edital)}
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <dl>
-
-    <div>
-
-      <dt>
-        Vagas no Mestrado
-      </dt>
-
-      <dd>
-        ${p.vagas.total}
-      </dd>
-
-    </div>
-
-
-    <div>
-
-      <dt>
-        Inscrição
-      </dt>
-
-      <dd>
-
-        ${
-          p.inscricao.fim
-          ?fmt(p.inscricao.inicio)+' a '+fmt(p.inscricao.fim)
-          :'Ver edital'
-        }
-
-      </dd>
-
-    </div>
-
-
-    <div>
-
-      <dt>
-        Taxa
-      </dt>
-
-      <dd>
-        ${esc(p.inscricao.taxa)}
-      </dd>
-
-    </div>
-
-
-    <div>
-
-      <dt>
-        Projeto
-      </dt>
-
-      <dd>
-        ${esc(j.limite)}
-      </dd>
-
-    </div>
-
-  </dl>
-
-
-  <p class="sub">
-
-    ${esc(p.vagas.detalhe)}
-
-    ${esc(p.inscricao.obs)}
-
-  </p>
-
-
-  <details>
-
-    <summary>
-      Cronograma
-    </summary>
-
-    <div>
-
-      ${tbl(
-        ['Etapa','Data'],
-        p.cronograma
-      )}
-
-    </div>
-
-  </details>
-
-
-  <details>
-
-    <summary>
-      Etapas da seleção
-    </summary>
-
-    <div>
-
-      ${tbl(
-        ['Etapa','Tipo','Nota'],
-        p.selecao
-      )}
-
-    </div>
-
-  </details>
-
-
-  <details>
-
-    <summary>
-      Projeto de pesquisa
-    </summary>
-
-    <div>
-
-      <p>
-        ${esc(j.formato)}.
-      </p>
-
-      ${
-        j.regras
-        ?`
-          <p class="note">
-            ${esc(j.regras)}
-          </p>
-        `
-        :''
-      }
-
-
-      <b>
-        Estrutura
-      </b>
-
-
-      <ul>
-
-        ${j.estrutura.map(x=>`
-          <li>${esc(x)}</li>
-        `).join('')}
-
-      </ul>
-
-
-      ${
-        j.criterios.length
-
-        ?
-
-        `
-        <b>
-          Critérios e pesos
-        </b>
-
-        ${tbl(
-          ['Critério','Peso'],
-          j.criterios
-        )}
-        `
-
-        :
-
-        ''
-      }
-
-    </div>
-
-  </details>
-
-
-  <details>
-
-    <summary>
-      Linhas e orientadores
-    </summary>
-
-    <div>
-
-      ${
-        p.linhas.map(l=>`
-
-          <div class="linha">
-
-            <h4>
-
-              ${esc(l.nome)}
-
-              ${
-                l.vagas
-                ?` (${l.vagas} vagas)`
-                :''
-              }
-
-            </h4>
-
-
-            <p class="sub">
-
-              ${esc(l.escopo)}
-
-            </p>
-
-
-            ${
-              l.docentes.length
-
-              ?
-
-              `
-              <ul>
-
-                ${
-                  l.docentes.map(d=>`
-                    <li>${esc(d)}</li>
-                  `).join('')
-                }
-
-              </ul>
-              `
-
-              :
-
-              ''
-            }
-
-          </div>
-
-        `).join('')
-      }
-
-    </div>
-
-  </details>
-
-
-  <details>
-
-    <summary>
-      Documentos e proficiência
-    </summary>
-
-    <div>
-
-      <ul>
-
-        ${
-          p.documentos.map(x=>`
-            <li>${esc(x)}</li>
-          `).join('')
-        }
-
-      </ul>
-
-
-      <p>
-
-        <b>
-          Proficiência:
-        </b>
-
-        ${esc(p.proficiencia)}
-
-      </p>
-
-    </div>
-
-  </details>
-
-
-  <p class="sub">
-
-    Atualizado em ${fmt(p.atualizado)}
-
-    ${
-      p.url
-
-      ?
-
-      `
-      ·
-      <a
-        href="${esc(p.url)}"
-        target="_blank"
-        rel="noopener"
-      >
-        Edital oficial
-      </a>
-      `
-
-      :
-
-      ''
+  linhas:[
+    {
+      nome:"Produção do Espaço Agrário",
+      vagas:10,
+      escopo:"Espaço agrário, trabalho no campo, movimentos sociais, reforma agrária e agronegócio.",
+      docentes:[
+        "Christiane S. S. Campos (1)",
+        "Diana de M. de Carvalho (1)",
+        "Eraldo da S. Ramos Filho (2)",
+        "José Natan G. da Silva (1)",
+        "Josefa de Lisboa Santos (1)",
+        "Lucas Gama Lima (2)",
+        "Sônia de S. M. Menezes (2)"
+      ]
+    },
+    {
+      nome:"Dinâmica Territorial e Desenvolvimento",
+      vagas:8,
+      escopo:"Dinâmicas territoriais, planejamento urbano e regional, redes e desenvolvimento.",
+      docentes:[
+        "Ana Rocha dos Santos (1)",
+        "André Luiz André (1)",
+        "Christiane S. S. Campos (2)",
+        "José Eloízio da Costa (2)",
+        "Leônidas de S. Marques (1)",
+        "Lucas Gama Lima (1)"
+      ]
+    },
+    {
+      nome:"Análise Geoambiental e Ordenamento do Território",
+      vagas:8,
+      escopo:"Estudos geoambientais, gestão ambiental, paisagem e ordenamento territorial.",
+      docentes:[
+        "Alberlene R. de Oliveira (1)",
+        "Carlos de O. Bispo (1)",
+        "Francisco J. Castelhano (2)",
+        "Hélio Mário de Araújo (2)",
+        "Márcia Eliane S. Carvalho (2)"
+      ]
     }
+  ],
 
-  </p>
+  documentos:[
+    "Formulário de inscrição",
+    "Linha e docente pretendido",
+    "Projeto de pesquisa",
+    "RG e CPF",
+    "Histórico e diploma",
+    "Lattes comprovado",
+    "Documentos de ações afirmativas (se aplicável)"
+  ],
 
-
-</article>
-
-`;
-
+  proficiencia:"Conforme regulamento do programa e normas da pós-graduação da UFS."
 }
-
-
-/* =====================================================
-   COMPARAÇÃO
-   ===================================================== */
-
-function compare(ps){
-
-  return `
-
-  <div class="card">
-
-    ${
-      tbl(
-
-        [''].concat(
-          ps.map(p=>p.sigla)
-        ),
-
-        [
-
-          [
-            'Vagas no Mestrado',
-            ...ps.map(p=>p.vagas.total)
-          ],
-
-          [
-            'Inscrição',
-            ...ps.map(p=>
-              p.inscricao.fim
-              ?fmt(p.inscricao.inicio)+' a '+fmt(p.inscricao.fim)
-              :'Ver edital'
-            )
-          ],
-
-          [
-            'Taxa',
-            ...ps.map(p=>p.inscricao.taxa)
-          ],
-
-          [
-            'Limite do projeto',
-            ...ps.map(p=>p.projeto.limite)
-          ],
-
-          [
-            'Etapas',
-            ...ps.map(p=>p.selecao.length)
-          ],
-
-          [
-            'Modalidade',
-            ...ps.map(p=>p.modalidade)
-          ],
-
-          [
-            'Linhas',
-            ...ps.map(p=>
-              p.linhas
-              .map(l=>l.nome)
-              .join('; ')
-            )
-          ]
-
-        ]
-
-      )
-    }
-
-  </div>
-
-  `;
-
-}
-
-
-/* =====================================================
-   RENDERIZAÇÃO
-   ===================================================== */
-
-let view=1;
-
-
-function render(){
-
-  const q=document
-    .getElementById('q')
-    .value
-    .toLowerCase();
-
-
-  const st=document
-    .getElementById('st')
-    .value;
-
-
-  const ps=PROGRAMAS.filter(
-
-    p=>
-
-      (
-        !q ||
-
-        JSON.stringify(p)
-        .toLowerCase()
-        .includes(q)
-      )
-
-      &&
-
-      (
-        !st ||
-
-        status(p)[0]===st
-      )
-
-  );
-
-
-  document.getElementById('out').innerHTML=
-
-    !ps.length
-
-    ?
-
-    '<div class="card">Nenhum programa encontrado. Tente outra busca.</div>'
-
-    :
-
-    view===1
-
-    ?
-
-    ps.map(card).join('')
-
-    :
-
-    compare(ps);
-
-}
-
-
-/* =====================================================
-   EVENTOS
-   ===================================================== */
-
-q.oninput=st.onchange=render;
-
-
-v1.onclick=()=>{
-
-  view=1;
-
-  v1.className='on';
-
-  v2.className='';
-
-  render();
-
-};
-
-
-v2.onclick=()=>{
-
-  view=2;
-
-  v2.className='on';
-
-  v1.className='';
-
-  render();
-
-};
-
-
-render();
-
-</script>
-
-</body>
-</html>
