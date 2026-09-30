@@ -4,93 +4,651 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mestrados Abertos – Geografia</title>
+
 <style>
-:root{--bg:#eef2f4;--ink:#14232b;--mut:#51636c;--card:#fff;--line:#d3dde2;--ac:#0f6b6b;--ok:#1d7a3f;--soon:#9a6a00;--end:#8a3b3b}
+:root{
+  --bg:#eef2f4;
+  --ink:#14232b;
+  --mut:#51636c;
+  --card:#fff;
+  --line:#d3dde2;
+  --ac:#0f6b6b;
+  --ok:#1d7a3f;
+  --soon:#9a6a00;
+  --end:#8a3b3b;
+}
+
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
-header,main{max-width:1000px;margin:0 auto;padding:0 16px}
-header{padding-top:32px}
-h1{font:700 2rem/1.2 Georgia,serif;margin:0 0 6px}
-header p{color:var(--mut);margin:0 0 20px;max-width:60ch}
-.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-input,select,button{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink)}
-input{flex:1;min-width:200px}
-button{cursor:pointer}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
-:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:16px}
-.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.card h2{font:700 1.3rem Georgia,serif;margin:0}
-.sub{color:var(--mut);font-size:.92rem;margin:2px 0 0}
-.pill{font-size:.85rem;font-weight:600;padding:3px 10px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
-.aberta{color:var(--ok)}.breve{color:var(--soon)}.fim{color:var(--end)}.neutro{color:var(--mut)}
-dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0}
-dt{font-size:.85rem;color:var(--mut)}dd{margin:0;font-weight:600}
-details{border-top:1px solid var(--line);padding:10px 0}
-summary{cursor:pointer;font-weight:600}
-details>div{padding:8px 0 0}
-table{border-collapse:collapse;width:100%;font-size:.93rem}
-th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-.scroll{overflow-x:auto}
-ul{margin:6px 0;padding-left:20px}
-.linha{margin-bottom:12px}.linha h4{margin:0}
-.note{background:#fff7e0;border-left:4px solid var(--soon);padding:8px 12px;margin:8px 0}
-footer{max-width:1000px;margin:0 auto;padding:16px 16px 40px;color:var(--mut);font-size:.9rem}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:16px/1.55 system-ui,sans-serif
+}
+
+header,main{
+  max-width:1000px;
+  margin:0 auto;
+  padding:0 16px
+}
+
+header{
+  padding-top:32px
+}
+
+h1{
+  font:700 2rem/1.2 Georgia,serif;
+  margin:0 0 6px
+}
+
+header p{
+  color:var(--mut);
+  margin:0 0 20px;
+  max-width:60ch
+}
+
+.bar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:20px
+}
+
+input,select,button{
+  font:inherit;
+  padding:9px 12px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:#fff;
+  color:var(--ink)
+}
+
+input{
+  flex:1;
+  min-width:200px
+}
+
+button{
+  cursor:pointer
+}
+
+button.on{
+  background:var(--ac);
+  color:#fff;
+  border-color:var(--ac)
+}
+
+:focus-visible{
+  outline:3px solid var(--ac);
+  outline-offset:2px
+}
+
+/* CAIXAS DOS PROGRAMAS */
+
+.card{
+  background:var(--card);
+  border:2px solid var(--line);
+  border-radius:8px;
+  padding:20px;
+  margin-bottom:16px;
+  transition:background-color .2s,border-color .2s
+}
+
+/* Inscrição aberta */
+.card.aberta{
+  background:#d9ead3;
+  border-color:#1d7a3f;
+}
+
+/* Inscrição futura */
+.card.breve{
+  background:#fff2cc;
+  border-color:#9a6a00;
+}
+
+/* Inscrição encerrada */
+.card.fim{
+  background:#f4cccc;
+  border-color:#8a3b3b;
+}
+
+/* Situação sem data definida */
+.card.neutro{
+  background:#f1f3f4;
+  border-color:#9aa6ad;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start
+}
+
+.card h2{
+  font:700 1.3rem Georgia,serif;
+  margin:0
+}
+
+.sub{
+  color:var(--mut);
+  font-size:.92rem;
+  margin:2px 0 0
+}
+
+/* Retirado visualmente: não aparece mais dentro da caixa */
+.pill{
+  display:none
+}
+
+.aberta{
+  color:var(--ok)
+}
+
+.breve{
+  color:var(--soon)
+}
+
+.fim{
+  color:var(--end)
+}
+
+.neutro{
+  color:var(--mut)
+}
+
+dl{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin:16px 0
+}
+
+dt{
+  font-size:.85rem;
+  color:var(--mut)
+}
+
+dd{
+  margin:0;
+  font-weight:600
+}
+
+details{
+  border-top:1px solid rgba(0,0,0,.15);
+  padding:10px 0
+}
+
+summary{
+  cursor:pointer;
+  font-weight:600
+}
+
+details>div{
+  padding:8px 0 0
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+  font-size:.93rem
+}
+
+th,td{
+  text-align:left;
+  padding:7px 10px;
+  border-bottom:1px solid rgba(0,0,0,.12);
+  vertical-align:top
+}
+
+.scroll{
+  overflow-x:auto
+}
+
+ul{
+  margin:6px 0;
+  padding-left:20px
+}
+
+.linha{
+  margin-bottom:12px
+}
+
+.linha h4{
+  margin:0
+}
+
+.note{
+  background:#fff7e0;
+  border-left:4px solid var(--soon);
+  padding:8px 12px;
+  margin:8px 0
+}
+
+footer{
+  max-width:1000px;
+  margin:0 auto;
+  padding:16px 16px 40px;
+  color:var(--mut);
+  font-size:.9rem
+}
 </style>
 </head>
+
 <body>
+
 <header>
   <h1>Mestrados abertos em Geografia</h1>
-  <p>Prazos, vagas, exigências do projeto e orientadores dos editais, no mesmo formato para você comparar.</p>
+
+  <p>
+    Prazos, vagas, exigências do projeto e orientadores dos editais,
+    no mesmo formato para você comparar.
+  </p>
+
   <div class="bar">
-    <input id="q" type="search" placeholder="Buscar por universidade, linha, orientador ou tema" aria-label="Buscar">
+    <input
+      id="q"
+      type="search"
+      placeholder="Buscar por universidade, linha, orientador ou tema"
+      aria-label="Buscar"
+    >
+
     <select id="st" aria-label="Situação da inscrição">
-      <option value="">Todas as situações</option><option>Aberta</option><option>Em breve</option><option>Encerrada</option><option>Ver edital</option>
+      <option value="">Todas as situações</option>
+      <option>Aberta</option>
+      <option>Em breve</option>
+      <option>Encerrada</option>
+      <option>Ver edital</option>
     </select>
-    <button id="v1" class="on">Programas</button><button id="v2">Comparar</button>
+
+    <button id="v1" class="on">Programas</button>
+    <button id="v2">Comparar</button>
   </div>
 </header>
+
 <main id="out"></main>
-<footer>Dados compilados dos editais. Confirme sempre prazos e regras no edital oficial antes de se inscrever.</footer>
+
+<footer>
+  Dados compilados dos editais. Confirme sempre prazos e regras no edital oficial antes de se inscrever.
+</footer>
+
 <script src="data/programas.js"></script>
+
 <script>
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const fmt=d=>d?d.split('-').reverse().join('/'):'—';
-function status(p){const i=p.inscricao;if(!i.fim)return['Ver edital','neutro'];const h=new Date().toISOString().slice(0,10);
-  if(i.inicio&&h<i.inicio)return['Em breve','breve'];if(h>i.fim)return['Encerrada','fim'];return['Aberta','aberta'];}
-const tbl=(h,rows)=>`<div class="scroll"><table><tr>${h.map(x=>`<th>${esc(x)}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>`;
-function card(p){const[s,c]=status(p),j=p.projeto;
- return `<article class="card">
- <div class="top"><div><h2>${esc(p.sigla)} – ${esc(p.programa)}</h2><p class="sub">${esc(p.nome)} · ${esc(p.cidade)}/${esc(p.uf)} · ${esc(p.edital)}</p></div><span class="pill ${c}">${s}</span></div>
- <dl><div><dt>Vagas no Mestrado</dt><dd>${p.vagas.total}</dd></div>
- <div><dt>Inscrição</dt><dd>${p.inscricao.fim?fmt(p.inscricao.inicio)+' a '+fmt(p.inscricao.fim):'Ver edital'}</dd></div>
- <div><dt>Taxa</dt><dd>${esc(p.inscricao.taxa)}</dd></div>
- <div><dt>Projeto</dt><dd>${esc(j.limite)}</dd></div></dl>
- <p class="sub">${esc(p.vagas.detalhe)} ${esc(p.inscricao.obs)}</p>
- <details><summary>Cronograma</summary><div>${tbl(['Etapa','Data'],p.cronograma)}</div></details>
- <details><summary>Etapas da seleção</summary><div>${tbl(['Etapa','Tipo','Nota'],p.selecao)}</div></details>
- <details><summary>Projeto de pesquisa</summary><div><p>${esc(j.formato)}.</p>${j.regras?`<p class="note">${esc(j.regras)}</p>`:''}
-  <b>Estrutura</b><ul>${j.estrutura.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
-  ${j.criterios.length?'<b>Critérios e pesos</b>'+tbl(['Critério','Peso'],j.criterios):''}</div></details>
- <details><summary>Linhas e orientadores</summary><div>${p.linhas.map(l=>`<div class="linha"><h4>${esc(l.nome)}${l.vagas?` (${l.vagas} vagas)`:''}</h4><p class="sub">${esc(l.escopo)}</p>
-  ${l.docentes.length?`<ul>${l.docentes.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>`:''}</div>`).join('')}</div></details>
- <details><summary>Documentos e proficiência</summary><div><ul>${p.documentos.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p><b>Proficiência:</b> ${esc(p.proficiencia)}</p></div></details>
- <p class="sub">Atualizado em ${fmt(p.atualizado)}${p.url?` · <a href="${esc(p.url)}">Edital oficial</a>`:''}</p></article>`;}
-function compare(ps){return `<div class="card">`+tbl(['','...'].slice(0,1).concat(ps.map(p=>p.sigla)),[
- ['Vagas no Mestrado',...ps.map(p=>p.vagas.total)],
- ['Inscrição',...ps.map(p=>p.inscricao.fim?fmt(p.inscricao.inicio)+' a '+fmt(p.inscricao.fim):'Ver edital')],
- ['Taxa',...ps.map(p=>p.inscricao.taxa)],
- ['Limite do projeto',...ps.map(p=>p.projeto.limite)],
- ['Etapas',...ps.map(p=>p.selecao.length)],
- ['Modalidade',...ps.map(p=>p.modalidade)],
- ['Linhas',...ps.map(p=>p.linhas.map(l=>l.nome).join('; '))]])+`</div>`;}
+
+const esc=s=>String(s??'').replace(
+  /[&<>"]/g,
+  c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;'
+  }[c])
+);
+
+const fmt=d=>d
+  ?d.split('-').reverse().join('/')
+  :'—';
+
+
+/* DEFINE A SITUAÇÃO PELA DATA ATUAL */
+
+function status(p){
+
+  const i=p.inscricao;
+
+  if(!i.fim)
+    return ['Ver edital','neutro'];
+
+  const h=new Date().toISOString().slice(0,10);
+
+  if(i.inicio && h<i.inicio)
+    return ['Em breve','breve'];
+
+  if(h>i.fim)
+    return ['Encerrada','fim'];
+
+  return ['Aberta','aberta'];
+}
+
+
+/* TABELAS */
+
+const tbl=(h,rows)=>
+`<div class="scroll">
+  <table>
+    <tr>
+      ${h.map(x=>`<th>${esc(x)}</th>`).join('')}
+    </tr>
+
+    ${rows.map(r=>
+      `<tr>
+        ${r.map(c=>`<td>${esc(c)}</td>`).join('')}
+      </tr>`
+    ).join('')}
+
+  </table>
+</div>`;
+
+
+/* CARTÃO DO PROGRAMA */
+
+function card(p){
+
+  const[s,c]=status(p);
+  const j=p.projeto;
+
+  return `
+  <article class="card ${c}">
+
+    <div class="top">
+
+      <div>
+
+        <h2>
+          ${esc(p.sigla)} – ${esc(p.programa)}
+        </h2>
+
+        <p class="sub">
+          ${esc(p.nome)} ·
+          ${esc(p.cidade)}/${esc(p.uf)} ·
+          ${esc(p.edital)}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <dl>
+
+      <div>
+        <dt>Vagas no Mestrado</dt>
+        <dd>${p.vagas.total}</dd>
+      </div>
+
+      <div>
+        <dt>Inscrição</dt>
+        <dd>
+          ${
+            p.inscricao.fim
+            ?fmt(p.inscricao.inicio)+' a '+fmt(p.inscricao.fim)
+            :'Ver edital'
+          }
+        </dd>
+      </div>
+
+      <div>
+        <dt>Taxa</dt>
+        <dd>${esc(p.inscricao.taxa)}</dd>
+      </div>
+
+      <div>
+        <dt>Projeto</dt>
+        <dd>${esc(j.limite)}</dd>
+      </div>
+
+    </dl>
+
+
+    <p class="sub">
+      ${esc(p.vagas.detalhe)}
+      ${esc(p.inscricao.obs)}
+    </p>
+
+
+    <details>
+      <summary>Cronograma</summary>
+
+      <div>
+        ${tbl(['Etapa','Data'],p.cronograma)}
+      </div>
+
+    </details>
+
+
+    <details>
+      <summary>Etapas da seleção</summary>
+
+      <div>
+        ${tbl(['Etapa','Tipo','Nota'],p.selecao)}
+      </div>
+
+    </details>
+
+
+    <details>
+
+      <summary>Projeto de pesquisa</summary>
+
+      <div>
+
+        <p>${esc(j.formato)}.</p>
+
+        ${
+          j.regras
+          ?`<p class="note">${esc(j.regras)}</p>`
+          :''
+        }
+
+        <b>Estrutura</b>
+
+        <ul>
+          ${j.estrutura.map(x=>`<li>${esc(x)}</li>`).join('')}
+        </ul>
+
+        ${
+          j.criterios.length
+          ?'<b>Critérios e pesos</b>'+
+           tbl(['Critério','Peso'],j.criterios)
+          :''
+        }
+
+      </div>
+
+    </details>
+
+
+    <details>
+
+      <summary>Linhas e orientadores</summary>
+
+      <div>
+
+        ${
+          p.linhas.map(l=>
+
+            `<div class="linha">
+
+              <h4>
+                ${esc(l.nome)}
+                ${l.vagas?` (${l.vagas} vagas)`:''}
+              </h4>
+
+              <p class="sub">
+                ${esc(l.escopo)}
+              </p>
+
+              ${
+                l.docentes.length
+                ?`<ul>
+                    ${l.docentes.map(d=>`<li>${esc(d)}</li>`).join('')}
+                  </ul>`
+                :''
+              }
+
+            </div>`
+
+          ).join('')
+        }
+
+      </div>
+
+    </details>
+
+
+    <details>
+
+      <summary>Documentos e proficiência</summary>
+
+      <div>
+
+        <ul>
+          ${p.documentos.map(x=>`<li>${esc(x)}</li>`).join('')}
+        </ul>
+
+        <p>
+          <b>Proficiência:</b>
+          ${esc(p.proficiencia)}
+        </p>
+
+      </div>
+
+    </details>
+
+
+    <p class="sub">
+
+      Atualizado em ${fmt(p.atualizado)}
+
+      ${
+        p.url
+        ?` · <a href="${esc(p.url)}">Edital oficial</a>`
+        :''
+      }
+
+    </p>
+
+  </article>`;
+}
+
+
+/* COMPARAÇÃO */
+
+function compare(ps){
+
+  return `
+  <div class="card">
+
+    ${
+      tbl(
+        ['','...'].slice(0,1).concat(ps.map(p=>p.sigla)),
+
+        [
+          [
+            'Vagas no Mestrado',
+            ...ps.map(p=>p.vagas.total)
+          ],
+
+          [
+            'Inscrição',
+            ...ps.map(p=>
+              p.inscricao.fim
+              ?fmt(p.inscricao.inicio)+' a '+fmt(p.inscricao.fim)
+              :'Ver edital'
+            )
+          ],
+
+          [
+            'Taxa',
+            ...ps.map(p=>p.inscricao.taxa)
+          ],
+
+          [
+            'Limite do projeto',
+            ...ps.map(p=>p.projeto.limite)
+          ],
+
+          [
+            'Etapas',
+            ...ps.map(p=>p.selecao.length)
+          ],
+
+          [
+            'Modalidade',
+            ...ps.map(p=>p.modalidade)
+          ],
+
+          [
+            'Linhas',
+            ...ps.map(p=>
+              p.linhas.map(l=>l.nome).join('; ')
+            )
+          ]
+        ]
+      )
+    }
+
+  </div>`;
+}
+
+
+/* RENDERIZAÇÃO */
+
 let view=1;
-function render(){const q=document.getElementById('q').value.toLowerCase(),st=document.getElementById('st').value;
- const ps=PROGRAMAS.filter(p=>(!q||JSON.stringify(p).toLowerCase().includes(q))&&(!st||status(p)[0]===st));
- document.getElementById('out').innerHTML=!ps.length?'<div class="card">Nenhum programa encontrado. Tente outra busca.</div>':view==1?ps.map(card).join(''):compare(ps);}
+
+function render(){
+
+  const q=document
+    .getElementById('q')
+    .value
+    .toLowerCase();
+
+  const st=document
+    .getElementById('st')
+    .value;
+
+  const ps=PROGRAMAS.filter(
+
+    p=>
+      (!q ||
+        JSON.stringify(p)
+        .toLowerCase()
+        .includes(q)
+      )
+
+      &&
+
+      (!st ||
+        status(p)[0]===st
+      )
+
+  );
+
+  document.getElementById('out').innerHTML=
+
+    !ps.length
+
+    ?'<div class="card">Nenhum programa encontrado. Tente outra busca.</div>'
+
+    :view==1
+      ?ps.map(card).join('')
+      :compare(ps);
+}
+
+
+/* EVENTOS */
+
 q.oninput=st.onchange=render;
-v1.onclick=()=>{view=1;v1.className='on';v2.className='';render()};
-v2.onclick=()=>{view=2;v2.className='on';v1.className='';render()};
+
+v1.onclick=()=>{
+  view=1;
+  v1.className='on';
+  v2.className='';
+  render();
+};
+
+v2.onclick=()=>{
+  view=2;
+  v2.className='on';
+  v1.className='';
+  render();
+};
+
 render();
+
 </script>
+
 </body>
 </html>
